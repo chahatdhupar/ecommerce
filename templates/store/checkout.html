@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">Checkout</h3>
+
+<div class="row">
+
+    <!-- Checkout Form -->
+    <div class="col-md-7">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h5 class="mb-4">Shipping Details</h5>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            Place Order — ${{ cart.get_total }}
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5>Order Summary</h5>
+                <hr>
+                {% for item in items %}
+                <div class="d-flex justify-content-between mb-2">
+                    <span>{{ item.product.name }} x{{ item.quantity }}</span>
+                    <strong>${{ item.get_total_price }}</strong>
+                </div>
+                {% endfor %}
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <strong>Total</strong>
+                    <strong class="text-primary">${{ cart.get_total }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
